@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/app.dart';
+import 'app/app.dart';
+import 'app/app_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  await AppService.instance.init();
+
+  runApp(
+    const MyApp(),
+  );
 }

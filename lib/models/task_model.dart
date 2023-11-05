@@ -26,4 +26,21 @@ class TaskModel {
   final bool pinned;
   @HiveField(5)
   final DateTime creationDate;
+
+  TaskModel copyWith({
+    int? taskId,
+    String? taskText,
+    bool? checked,
+    bool? deleted,
+    bool? pinned,
+  }) {
+    return TaskModel(
+      taskId: taskId ?? this.taskId,
+      taskText: taskText ?? this.taskText,
+      checked: checked ?? this.checked,
+      deleted: deleted ?? this.deleted,
+      pinned: pinned ?? this.pinned,
+      creationDate: creationDate,
+    );
+  }
 }

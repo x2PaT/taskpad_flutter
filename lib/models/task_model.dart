@@ -6,27 +6,24 @@ part 'task_model.g.dart';
 @HiveType(typeId: Config.taskModelTypeID)
 class TaskModel {
   TaskModel({
-    required this.id,
-    required this.listId,
+    required this.taskId,
     required this.taskText,
-    required this.checked,
-    required this.deleted,
-    required this.pinned,
+    this.checked = false,
+    this.deleted = false,
+    this.pinned = false,
     DateTime? creationDate,
   }) : creationDate = creationDate ?? DateTime.now();
 
   @HiveField(0)
-  final String id;
+  final int taskId;
   @HiveField(1)
-  final String listId;
-  @HiveField(2)
   final String taskText;
-  @HiveField(3)
+  @HiveField(2)
   final bool checked;
-  @HiveField(4)
+  @HiveField(3)
   final bool deleted;
-  @HiveField(5)
+  @HiveField(4)
   final bool pinned;
-  @HiveField(6)
+  @HiveField(5)
   final DateTime creationDate;
 }

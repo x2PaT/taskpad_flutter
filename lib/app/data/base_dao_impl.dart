@@ -20,7 +20,7 @@ abstract class BaseDao<T> implements IBaseDao<T> {
   }
 
   @override
-  Future<List<T>> getAllObjects() async {
+  List<T> getAllObjects() {
     return _box.values.toList();
   }
 

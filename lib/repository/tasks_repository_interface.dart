@@ -1,7 +1,7 @@
 import 'package:taskpad_flutter/models/task_model.dart';
 import 'package:taskpad_flutter/models/tasks_list_model.dart';
 
-import 'enums.dart';
+import '../app/enums/enums.dart';
 
 abstract class ITasksRepository {
   Future<void> initBoxes();

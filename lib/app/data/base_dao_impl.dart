@@ -6,7 +6,9 @@ abstract class BaseDao<T> implements IBaseDao<T> {
   late Box<T> _box;
   late String boxName;
 
-  BaseDao(this.boxName);
+  BaseDao(this.boxName) {
+    _box = Hive.box<T>(boxName);
+  }
 
   @override
   Future<void> initBox() async {

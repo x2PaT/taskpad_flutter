@@ -5,7 +5,5 @@ import 'app/app_service.dart';
 void main() async {
   await AppService.instance.init();
 
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }

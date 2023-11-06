@@ -8,10 +8,6 @@ class DiService {
   static final getIt = GetIt.instance;
 
   void init() {
-    configureDependencies();
-  }
-
-  void configureDependencies() {
 //bloc
 
 //repository

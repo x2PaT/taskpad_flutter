@@ -8,7 +8,7 @@ part 'tasks_list_model.g.dart';
 class TasksListModel {
   TasksListModel({
     required this.listID,
-    required this.listTasks,
+    this.listTasks = const [],
   });
 
   @HiveField(0)

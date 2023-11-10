@@ -7,8 +7,10 @@ abstract class ITasksRepository {
   Future<void> initBoxes();
   Future<void> addTasksList(TasksListModel tasksListModel);
   Future<void> addTask(int listID, TaskModel taskModel);
+  Stream<List<TasksListModel>> getTasksListModelStream();
+  Stream<List<TaskModel>> getTaskModelFromListIDStream(int listID);
   List<TasksListModel> getTasksListModels();
-  List<TaskModel> getTasksForListID(int listID);
+  List<TaskModel> getTasksFromListID(int listID);
   Future<void> deleteTask(int taskID);
   Future<void> deleteTasksList(int listID);
   void updateTasksOrder(int listID, TasksListModel model);

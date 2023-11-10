@@ -6,7 +6,6 @@ import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
 
 import '../app/enums/enums.dart';
 
-
 class TasksRepository implements ITasksRepository {
   TasksRepository({
     required this.taskDao,
@@ -36,7 +35,7 @@ class TasksRepository implements ITasksRepository {
   }
 
   @override
-  List<TaskModel> getTasksForListID(int listID) {
+  List<TaskModel> getTasksFromListID(int listID) {
     final TasksListModel? listObject = tasksListsDao.readObjectByKey(listID);
 
     if (listObject == null) {
@@ -82,5 +81,21 @@ class TasksRepository implements ITasksRepository {
         taskDao.updateTaskPinned(task, data);
         break;
     }
+  }
+
+  @override
+  Stream<List<TaskModel>> getTaskModelFromListIDStream(int listID) {
+    final TasksListModel? listObject = tasksListsDao.readObjectByKey(listID);
+
+    if (listObject == null) {
+      throw Exception("Unknown list ID: $listID");
+    }
+
+    return taskDao.readObjectsStream(keys: listObject.listTasks);
+  }
+
+  @override
+  Stream<List<TasksListModel>> getTasksListModelStream() {
+    return tasksListsDao.readObjectsStream();
   }
 }

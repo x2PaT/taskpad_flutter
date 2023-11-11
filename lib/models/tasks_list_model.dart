@@ -5,8 +5,8 @@ import '../app/constants/config.dart';
 part 'tasks_list_model.g.dart';
 
 @HiveType(typeId: Config.tasksListModelTypeID)
-class TasksListModel {
-  TasksListModel({
+class ListModel {
+  ListModel({
     required this.listID,
     this.listTasks = const [],
   });
@@ -16,11 +16,11 @@ class TasksListModel {
   @HiveField(1)
   final List<int> listTasks;
 
-  TasksListModel copyWith({
+  ListModel copyWith({
     int? listID,
     List<int>? listTasks,
   }) {
-    return TasksListModel(
+    return ListModel(
       listID: listID ?? this.listID,
       listTasks: listTasks ?? this.listTasks,
     );

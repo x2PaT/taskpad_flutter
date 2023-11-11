@@ -13,10 +13,10 @@ class HiveService {
     await Hive.initFlutter();
     Hive
       ..registerAdapter<TaskModel>((TaskModelAdapter()))
-      ..registerAdapter<TasksListModel>((TasksListModelAdapter()))
+      ..registerAdapter<ListModel>((TasksListModelAdapter()))
       ..registerAdapter<SettingModel>((SettingModelAdapter()));
 
     await Hive.openBox<TaskModel>(Config.tasksBoxName);
-    await Hive.openBox<TasksListModel>(Config.tasksLisksBoxName);
+    await Hive.openBox<ListModel>(Config.tasksLisksBoxName);
   }
 }

@@ -1,22 +1,14 @@
 import 'package:taskpad_flutter/models/task_model.dart';
-import 'package:taskpad_flutter/models/tasks_list_model.dart';
 
 import '../app/enums/enums.dart';
 
 abstract class ITasksRepository {
-  Future<void> initBoxes();
-  Future<void> clearListsTasksBox();
-  Future<void> clearTasksBox();
-  Future<void> addTasksList(TasksListModel tasksListModel);
-  Future<void> addTask(int listID, TaskModel taskModel);
-  Stream<List<TasksListModel>> getTasksListModelStream();
   Stream<List<TaskModel>> getTaskModelFromListIDStream(int listID);
-  List<TasksListModel> getTasksListModels();
   List<TaskModel> getTasksFromListID(int listID);
-  Future<void> deleteTask(int taskID);
-  Future<void> deleteTasksList(int listID);
-  void updateTasksOrder(int listID, TasksListModel model);
+  Future<void> addTask(int listID, TaskModel taskModel);
   void updateTaskDispatcher(UpdateTaskActions actions, TaskModel task, dynamic data);
+  Future<void> clearTasksBox();
+  Future<void> deleteTask(int taskID);
 
   int getAllTasksCount();
 }

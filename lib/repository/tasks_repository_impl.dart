@@ -13,15 +13,7 @@ class TasksRepository implements ITasksRepository {
   });
 
   final TaskDao taskDao;
-  final TasksListsDao tasksListsDao;
-
-//TODO: make auto init
-// software cant wait for async function in class constructor body.
-  @override
-  Future<void> initBoxes() async {
-    await taskDao.initBox();
-    await tasksListsDao.initBox();
-  }
+  final ListDao tasksListsDao;
 
   @override
   Future<void> addTask(int listID, TaskModel taskModel) async {
@@ -30,13 +22,8 @@ class TasksRepository implements ITasksRepository {
   }
 
   @override
-  Future<void> addTasksList(TasksListModel tasksListModel) async {
-    await tasksListsDao.addObject(tasksListModel.listID, tasksListModel);
-  }
-
-  @override
   List<TaskModel> getTasksFromListID(int listID) {
-    final TasksListModel? listObject = tasksListsDao.readObjectByKey(listID);
+    final ListModel? listObject = tasksListsDao.readObjectByKey(listID);
 
     if (listObject == null) {
       throw Exception("Unknown list ID: $listID");
@@ -46,30 +33,8 @@ class TasksRepository implements ITasksRepository {
   }
 
   @override
-  List<TasksListModel> getTasksListModels() {
-    return tasksListsDao.getAllObjects();
-  }
-
-  @override
   Future<void> deleteTask(int taskID) async {
     await taskDao.deleteObject(taskID);
-  }
-
-  @override
-  Future<void> deleteTasksList(int listID) async {
-    final listmodel = tasksListsDao.readObjectByKey(listID);
-    final listTasks = listmodel?.listTasks ?? [];
-
-    for (var id in listTasks) {
-      await taskDao.deleteObject(id);
-    }
-
-    await tasksListsDao.deleteObject(listID);
-  }
-
-  @override
-  Future<void> updateTasksOrder(int listID, TasksListModel model) async {
-    await tasksListsDao.updateTasksOrder(listID, model);
   }
 
   @override
@@ -92,23 +57,13 @@ class TasksRepository implements ITasksRepository {
 
   @override
   Stream<List<TaskModel>> getTaskModelFromListIDStream(int listID) {
-    final TasksListModel? listObject = tasksListsDao.readObjectByKey(listID);
+    final ListModel? listObject = tasksListsDao.readObjectByKey(listID);
 
     if (listObject == null) {
       throw Exception("Unknown list ID: $listID");
     }
 
     return taskDao.readObjectsStream(keys: listObject.listTasks);
-  }
-
-  @override
-  Stream<List<TasksListModel>> getTasksListModelStream() {
-    return tasksListsDao.readObjectsStream();
-  }
-
-  @override
-  Future<void> clearListsTasksBox() async {
-    await tasksListsDao.clearBox();
   }
 
   @override

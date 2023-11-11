@@ -1,5 +1,6 @@
-import '../app/constants/config.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import '../app/constants/config.dart';
 
 part 'task_model.g.dart';
 
@@ -42,5 +43,10 @@ class TaskModel {
       pinned: pinned ?? this.pinned,
       creationDate: creationDate,
     );
+  }
+
+  @override
+  String toString() {
+    return 'TaskModel(taskId: $taskId, taskText: $taskText, checked: $checked, deleted: $deleted, pinned: $pinned, creationDate: $creationDate)';
   }
 }

@@ -4,37 +4,37 @@ import '../base_dao_impl.dart';
 class TaskDao extends BaseDao<TaskModel> {
   TaskDao(super.boxName);
 
-  void updateTaskText(TaskModel task, dynamic data) {
+  Future<void> updateTaskText(TaskModel task, dynamic data) async {
     if (data is String) {
       task = task.copyWith(taskText: data);
-      addObject(task.taskId, task);
+      await addObject(task.taskId, task);
     } else {
       throw Exception("Wrong data type");
     }
   }
 
-  void updateTaskChecked(TaskModel task, dynamic data) {
+  Future<void> updateTaskChecked(TaskModel task, dynamic data) async {
     if (data is bool) {
       task = task.copyWith(checked: data);
-      addObject(task.taskId, task);
+      await addObject(task.taskId, task);
     } else {
       throw Exception("Wrong data type");
     }
   }
 
-  void updateTaskDeleted(TaskModel task, dynamic data) {
+  Future<void> updateTaskDeleted(TaskModel task, dynamic data) async {
     if (data is bool) {
       task = task.copyWith(deleted: data);
-      addObject(task.taskId, task);
+      await addObject(task.taskId, task);
     } else {
       throw Exception("Wrong data type");
     }
   }
 
-  void updateTaskPinned(TaskModel task, dynamic data) {
+  Future<void> updateTaskPinned(TaskModel task, dynamic data) async {
     if (data is bool) {
       task = task.copyWith(pinned: data);
-      addObject(task.taskId, task);
+      await addObject(task.taskId, task);
     } else {
       throw Exception("Wrong data type");
     }

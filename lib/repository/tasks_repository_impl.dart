@@ -57,28 +57,35 @@ class TasksRepository implements ITasksRepository {
 
   @override
   Future<void> deleteTasksList(int listID) async {
+    final listmodel = tasksListsDao.readObjectByKey(listID);
+    final listTasks = listmodel?.listTasks ?? [];
+
+    for (var id in listTasks) {
+      await taskDao.deleteObject(id);
+    }
+
     await tasksListsDao.deleteObject(listID);
   }
 
   @override
-  void updateTasksOrder(int listID, TasksListModel model) {
-    tasksListsDao.updateTasksOrder(listID, model);
+  Future<void> updateTasksOrder(int listID, TasksListModel model) async {
+    await tasksListsDao.updateTasksOrder(listID, model);
   }
 
   @override
-  void updateTaskDispatcher(UpdateTaskActions action, TaskModel task, data) {
+  Future<void> updateTaskDispatcher(UpdateTaskActions action, TaskModel task, data) async {
     switch (action) {
       case UpdateTaskActions.updateText:
-        taskDao.updateTaskText(task, data);
+        await taskDao.updateTaskText(task, data);
         break;
       case UpdateTaskActions.updateChecked:
-        taskDao.updateTaskChecked(task, data);
+        await taskDao.updateTaskChecked(task, data);
         break;
       case UpdateTaskActions.updateDeleted:
-        taskDao.updateTaskDeleted(task, data);
+        await taskDao.updateTaskDeleted(task, data);
         break;
       case UpdateTaskActions.updatePinned:
-        taskDao.updateTaskPinned(task, data);
+        await taskDao.updateTaskPinned(task, data);
         break;
     }
   }
@@ -97,5 +104,20 @@ class TasksRepository implements ITasksRepository {
   @override
   Stream<List<TasksListModel>> getTasksListModelStream() {
     return tasksListsDao.readObjectsStream();
+  }
+
+  @override
+  Future<void> clearListsTasksBox() async {
+    await tasksListsDao.clearBox();
+  }
+
+  @override
+  Future<void> clearTasksBox() async {
+    await taskDao.clearBox();
+  }
+
+  @override
+  int getAllTasksCount() {
+    return taskDao.getAllObjects().length;
   }
 }

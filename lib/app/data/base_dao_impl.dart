@@ -20,6 +20,11 @@ abstract class BaseDao<T> implements IBaseDao<T> {
   }
 
   @override
+  Future<void> clearBox() async {
+   await _box.clear();
+  }
+
+  @override
   Future<void> addObject(int key, T object) async {
     await _box.put(key, object);
   }

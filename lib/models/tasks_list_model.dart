@@ -15,4 +15,17 @@ class TasksListModel {
   final int listID;
   @HiveField(1)
   final List<int> listTasks;
+
+  TasksListModel copyWith({
+    int? listID,
+    List<int>? listTasks,
+  }) {
+    return TasksListModel(
+      listID: listID ?? this.listID,
+      listTasks: listTasks ?? this.listTasks,
+    );
+  }
+
+  @override
+  String toString() => 'TasksListModel(listID: $listID, listTasks: $listTasks)';
 }

@@ -5,6 +5,8 @@ import '../app/enums/enums.dart';
 
 abstract class ITasksRepository {
   Future<void> initBoxes();
+  Future<void> clearListsTasksBox();
+  Future<void> clearTasksBox();
   Future<void> addTasksList(TasksListModel tasksListModel);
   Future<void> addTask(int listID, TaskModel taskModel);
   Stream<List<TasksListModel>> getTasksListModelStream();
@@ -15,4 +17,6 @@ abstract class ITasksRepository {
   Future<void> deleteTasksList(int listID);
   void updateTasksOrder(int listID, TasksListModel model);
   void updateTaskDispatcher(UpdateTaskActions actions, TaskModel task, dynamic data);
+
+  int getAllTasksCount();
 }

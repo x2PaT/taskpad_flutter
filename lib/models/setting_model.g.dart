@@ -38,5 +38,7 @@ class SettingModelAdapter extends TypeAdapter<SettingModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SettingModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is SettingModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

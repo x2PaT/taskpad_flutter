@@ -21,7 +21,7 @@ abstract class BaseDao<T> implements IBaseDao<T> {
 
   @override
   Future<void> clearBox() async {
-   await _box.clear();
+    await _box.clear();
   }
 
   @override
@@ -42,6 +42,13 @@ abstract class BaseDao<T> implements IBaseDao<T> {
   @override
   T? readObjectByKey(int key) {
     return _box.get(key);
+  }
+
+  @override
+  Stream<T> readSingleObjectStream({required int key}) {
+    return _box.listenable(keys: [key]).toStream().map(
+          (event) => event.values.first,
+        );
   }
 
   @override

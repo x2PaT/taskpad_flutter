@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tasks_list_model.dart';
+part of 'list_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TasksListModelAdapter extends TypeAdapter<ListModel> {
+class ListModelAdapter extends TypeAdapter<ListModel> {
   @override
   final int typeId = 41;
 
@@ -18,18 +18,24 @@ class TasksListModelAdapter extends TypeAdapter<ListModel> {
     };
     return ListModel(
       listID: fields[0] as int,
-      listTasks: (fields[1] as List).cast<int>(),
+      listName: fields[1] as String,
+      listTasks: (fields[2] as List).cast<int>(),
+      creationDate: fields[3] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ListModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.listID)
       ..writeByte(1)
-      ..write(obj.listTasks);
+      ..write(obj.listName)
+      ..writeByte(2)
+      ..write(obj.listTasks)
+      ..writeByte(3)
+      ..write(obj.creationDate);
   }
 
   @override
@@ -38,5 +44,7 @@ class TasksListModelAdapter extends TypeAdapter<ListModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TasksListModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is ListModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

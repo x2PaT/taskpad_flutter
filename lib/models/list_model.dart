@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../app/constants/config.dart';
@@ -9,7 +10,6 @@ class ListModel {
   ListModel({
     required this.listID,
     required this.listName,
-    this.listTasks = const [],
     DateTime? creationDate,
   }) : creationDate = creationDate ?? DateTime.now();
 
@@ -18,26 +18,21 @@ class ListModel {
   @HiveField(1)
   final String listName;
   @HiveField(2)
-  final List<int> listTasks;
-  @HiveField(3)
   final DateTime creationDate;
 
   ListModel copyWith({
     int? listID,
     String? listName,
-    List<int>? listTasks,
     DateTime? creationDate,
   }) {
     return ListModel(
       listID: listID ?? this.listID,
       listName: listName ?? this.listName,
-      listTasks: listTasks ?? this.listTasks,
       creationDate: creationDate ?? this.creationDate,
     );
   }
 
   @override
-  String toString() {
-    return 'ListModel(listID: $listID, listName: $listName, listTasks: $listTasks, creationDate: $creationDate)';
-  }
+  String toString() =>
+      'ListModel(listID: $listID, listName: $listName, creationDate: $creationDate)';
 }

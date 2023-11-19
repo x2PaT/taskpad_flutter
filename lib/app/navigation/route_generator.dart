@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taskpad_flutter/screens/home_screen/home_screen.dart';
 
+import '../../screens/home_screen.dart';
 import 'error_screen.dart';
 
 class RouteGeneretor {

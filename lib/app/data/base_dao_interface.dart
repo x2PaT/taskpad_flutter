@@ -6,5 +6,5 @@ abstract class IBaseDao<T> {
   Future<void> deleteObject(int key);
   T? readObjectByKey(int key);
   Stream<T> readSingleObjectStream({required int key});
-  Stream<List<T>> readObjectsStream({List<int>? keys});
+  Stream<List<T>> readObjectsStream();
 }

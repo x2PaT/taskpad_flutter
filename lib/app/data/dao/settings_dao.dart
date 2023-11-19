@@ -1,4 +1,3 @@
-import 'package:taskpad_flutter/app/constants/config.dart';
 
 import '../../../models/setting_model.dart';
 import '../base_dao_impl.dart';
@@ -6,6 +5,7 @@ import '../base_dao_impl.dart';
 class SettingsDao extends BaseDao<SettingModel> {
   SettingsDao(super.boxName);
   static const int darkModeKey = 22;
+  static const int currentListKey = 22;
 
   dynamic getValueForKey(int key) {
     final setting = readObjectByKey(key);
@@ -16,10 +16,18 @@ class SettingsDao extends BaseDao<SettingModel> {
     final newSetting = SettingModel(key: key, value: value);
     await addObject(key, newSetting);
   }
-}
 
-Future<SettingsDao> getSettingsDao() async {
-  final settingsDao = SettingsDao(Config.settingsBoxName);
-  await settingsDao.initBox();
-  return settingsDao;
+  Stream<int?> readCurrentListID() {
+    return readSingleObjectStream(key: currentListKey).map(
+      (event) => event.value,
+    );
+  }
+
+  int? readCurrentListIDValue() {
+    return getValueForKey(currentListKey);
+  }
+
+  Future<void> writeCurrentListID(int newListId) async {
+    await addObject(currentListKey, SettingModel(key: currentListKey, value: newListId));
+  }
 }

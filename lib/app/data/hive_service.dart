@@ -17,7 +17,7 @@ class HiveService {
       ..registerAdapter<SettingModel>((SettingModelAdapter()));
 
     await Hive.openBox<TaskModel>(Config.tasksBoxName);
-    await Hive.openBox<ListModel>(Config.lisksBoxName);
+    await Hive.openBox<ListModel>(Config.listsBoxName);
     await Hive.openBox<SettingModel>(Config.settingsBoxName);
   }
 }

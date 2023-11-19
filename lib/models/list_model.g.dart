@@ -19,22 +19,19 @@ class ListModelAdapter extends TypeAdapter<ListModel> {
     return ListModel(
       listID: fields[0] as int,
       listName: fields[1] as String,
-      listTasks: (fields[2] as List).cast<int>(),
-      creationDate: fields[3] as DateTime?,
+      creationDate: fields[2] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ListModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.listID)
       ..writeByte(1)
       ..write(obj.listName)
       ..writeByte(2)
-      ..write(obj.listTasks)
-      ..writeByte(3)
       ..write(obj.creationDate);
   }
 

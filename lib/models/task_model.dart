@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../app/constants/config.dart';
@@ -8,6 +9,8 @@ part 'task_model.g.dart';
 class TaskModel {
   TaskModel({
     required this.taskId,
+    required this.listId,
+    this.sortOrder = 2,
     required this.taskText,
     this.checked = false,
     this.deleted = false,
@@ -18,35 +21,44 @@ class TaskModel {
   @HiveField(0)
   final int taskId;
   @HiveField(1)
-  final String taskText;
+  final int listId;
   @HiveField(2)
-  final bool checked;
+  final int sortOrder;
   @HiveField(3)
-  final bool deleted;
+  final String taskText;
   @HiveField(4)
-  final bool pinned;
+  final bool checked;
   @HiveField(5)
+  final bool deleted;
+  @HiveField(6)
+  final bool pinned;
+  @HiveField(7)
   final DateTime creationDate;
 
   TaskModel copyWith({
     int? taskId,
+    int? listId,
+    int? sortOrder,
     String? taskText,
     bool? checked,
     bool? deleted,
     bool? pinned,
+    DateTime? creationDate,
   }) {
     return TaskModel(
       taskId: taskId ?? this.taskId,
+      listId: listId ?? this.listId,
+      sortOrder: sortOrder ?? this.sortOrder,
       taskText: taskText ?? this.taskText,
       checked: checked ?? this.checked,
       deleted: deleted ?? this.deleted,
       pinned: pinned ?? this.pinned,
-      creationDate: creationDate,
+      creationDate: creationDate ?? this.creationDate,
     );
   }
 
   @override
   String toString() {
-    return 'TaskModel(taskId: $taskId, taskText: $taskText, checked: $checked, deleted: $deleted, pinned: $pinned, creationDate: $creationDate)';
+    return 'TaskModel(taskId: $taskId, listId: $listId, sortOrder: $sortOrder, taskText: $taskText, checked: $checked, deleted: $deleted, pinned: $pinned, creationDate: $creationDate)';
   }
 }

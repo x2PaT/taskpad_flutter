@@ -1,52 +1,42 @@
+
+import 'package:rxdart/rxdart.dart';
+import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
+import 'package:taskpad_flutter/models/list_model.dart';
 import 'package:taskpad_flutter/repository/lists_repository_interface.dart';
 
-import '../app/data/dao/task_dao.dart';
-import '../app/data/dao/tasks_list_dao.dart';
-import '../models/tasks_list_model.dart';
+import '../app/data/dao/settings_dao.dart';
 
 class ListsRepository implements IListsRepository {
   ListsRepository({
-    required this.taskDao,
-    required this.tasksListsDao,
+    required this.listDao,
+    required this.settingsDao,
   });
 
-  final TaskDao taskDao;
-  final ListDao tasksListsDao;
+  final ListDao listDao;
+  final SettingsDao settingsDao;
 
   @override
-  Future<void> addList(ListModel tasksListModel) async {
-    await tasksListsDao.addObject(tasksListModel.listID, tasksListModel);
+  Stream<List<ListModel>> getListsStream() {
+    return listDao.readObjectsStream().startWith(listDao.getAllObjects());
   }
 
   @override
-  List<ListModel> getListModels() {
-    return tasksListsDao.getAllObjects();
+  Future<void> addList(ListModel tasksListModel) async {
+    await listDao.addObject(tasksListModel.listID, tasksListModel);
   }
 
   @override
   Future<void> deleteList(int listID) async {
-    final listmodel = tasksListsDao.readObjectByKey(listID);
-    final listTasks = listmodel?.listTasks ?? [];
-
-    for (var id in listTasks) {
-      await taskDao.deleteObject(id);
-    }
-
-    await tasksListsDao.deleteObject(listID);
+    await listDao.deleteObject(listID);
   }
 
   @override
-  Future<void> updateTasksOrder(int listID, ListModel model) async {
-    await tasksListsDao.updateTasksOrder(listID, model);
+  Future<void> updateCurrentListId(int listID) async {
+    await settingsDao.writeCurrentListID(listID);
   }
 
   @override
-  Stream<List<ListModel>> getListModelsStream() {
-    return tasksListsDao.readObjectsStream();
-  }
-
-  @override
-  Future<void> clearListsBox() async {
-    await tasksListsDao.clearBox();
+  Future<int?> getCurrentListId() async {
+    return settingsDao.readCurrentListIDValue();
   }
 }

@@ -41,20 +41,23 @@ abstract class BaseDao<T> implements IBaseDao<T> {
 
   @override
   T? readObjectByKey(int key) {
-    return _box.get(key);
+    final object = _box.get(key);
+
+    return object;
   }
 
   @override
   Stream<T> readSingleObjectStream({required int key}) {
-    return _box.listenable(keys: [key]).toStream().map(
-          (event) => event.values.first,
-        );
+    final T? initValue = readObjectByKey(key);
+    if (initValue != null) {
+      return _box.listenable(keys: [key]).toStream().map((event) => event.values.first);
+    } else {
+      throw Exception("Wrong key");
+    }
   }
 
   @override
-  Stream<List<T>> readObjectsStream({List<int>? keys}) {
-    return _box.listenable(keys: keys).toStream().map(
-          (event) => event.values.toList(),
-        );
+  Stream<List<T>> readObjectsStream() {
+    return _box.listenable().toStream().map((event) => event.values.toList());
   }
 }

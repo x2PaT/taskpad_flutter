@@ -39,18 +39,4 @@ class TaskDao extends BaseDao<TaskModel> {
       throw Exception("Wrong data type");
     }
   }
-
-  List<TaskModel> getTasksFromIDsList(List<int> listTasks) {
-    final List<TaskModel> tasks = [];
-    for (int taskID in listTasks) {
-      final TaskModel? task = readObjectByKey(taskID);
-      if (task == null) {
-        throw Exception("Unknown task ID: $taskID");
-      } else {
-        tasks.add(task);
-      }
-    }
-
-    return tasks;
-  }
 }

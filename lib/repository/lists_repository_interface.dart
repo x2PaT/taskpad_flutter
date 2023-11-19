@@ -1,10 +1,9 @@
-import '../models/tasks_list_model.dart';
+import '../models/list_model.dart';
 
 abstract class IListsRepository {
-  Stream<List<ListModel>> getListModelsStream();
-  List<ListModel> getListModels();
+  Stream<List<ListModel>> getListsStream();
   Future<void> addList(ListModel tasksListModel);
-  void updateTasksOrder(int listID, ListModel model);
-  Future<void> clearListsBox();
   Future<void> deleteList(int listID);
+  Future<void> updateCurrentListId(int listID);
+  Future<void> getCurrentListId();
 }

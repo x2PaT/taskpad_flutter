@@ -48,4 +48,14 @@ class TasksRepository implements ITasksRepository {
   List<TaskModel> getTaskModels() {
     return taskDao.getAllObjects();
   }
+
+  @override
+  Stream<int> currentListIdStream() {
+    return settingsDao.readCurrentListID().map((event) {
+      if (event == null) {
+        throw Exception();
+      }
+      return event;
+    });
+  }
 }

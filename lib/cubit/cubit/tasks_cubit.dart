@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskpad_flutter/dev_helpers/colored_prints.dart';
-import 'package:taskpad_flutter/models/list_model.dart';
-import 'package:taskpad_flutter/models/task_model.dart';
-import 'package:taskpad_flutter/repository/lists_repository_interface.dart';
-import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
+import '../../dev_helpers/colored_prints.dart';
+import '../../models/list_model.dart';
+import '../../models/task_model.dart';
+import '../../repository/lists_repository_interface.dart';
+import '../../repository/tasks_repository_interface.dart';
 
 part 'tasks_state.dart';
 
@@ -34,6 +34,12 @@ class TasksCubit extends Cubit<TasksState> {
       printR("object tasks");
 
       emit(state.copyWith(tasks: event));
+    });
+
+    tasksRepository.currentListIdStream().listen((event) {
+      printR("object currentListId");
+
+      emit(state.copyWith(currentListId: event));
     });
   }
 
@@ -90,6 +96,20 @@ class TasksCubit extends Cubit<TasksState> {
         taskText: "New task",
       ),
     );
+  }
+
+  void showNextList() {
+    final currentListIndex = state.lists.map((e) => e.listID).toList().indexOf(state.currentListId);
+    final newListId = state.lists[(currentListIndex + 1) % state.lists.length].listID;
+
+    changeCurrentList(newListId);
+  }
+
+  showPrevList() {
+    final currentListIndex = state.lists.map((e) => e.listID).toList().indexOf(state.currentListId);
+    final newListId = state.lists[(currentListIndex - 1) % state.lists.length].listID;
+
+    changeCurrentList(newListId);
   }
 }
 

@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskpad_flutter/cubit/cubit/tasks_cubit.dart';
+
+import '../cubit/cubit/tasks_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   static const String routeName = "/";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: HomeScreenDrawer(),
       appBar: AppBar(
         title: const Text("TaskPad Flutter"),
+        actions: [
+          IconButton(
+              onPressed: () => context.read<TasksCubit>().showPrevList(),
+              icon: Icon(Icons.arrow_circle_left_rounded)),
+          IconButton(
+              onPressed: () => context.read<TasksCubit>().showNextList(),
+              icon: Icon(Icons.arrow_circle_right)),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -21,22 +30,6 @@ class HomeScreen extends StatelessWidget {
         builder: (context, state) {
           return Column(
             children: [
-              SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  itemCount: state.lists.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    final item = state.lists[index];
-                    return ElevatedButton(
-                      onPressed: () {
-                        context.read<TasksCubit>().changeCurrentList(item.listID);
-                      },
-                      child: Text(item.listName),
-                    );
-                  },
-                ),
-              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: state.tasks.length,
@@ -60,6 +53,39 @@ class HomeScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class HomeScreenDrawer extends StatelessWidget {
+  const HomeScreenDrawer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final lists = context.watch<TasksCubit>().state.lists;
+
+    return Drawer(
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: lists.length,
+              itemBuilder: (context, index) {
+                final item = lists[index];
+                return ElevatedButton(
+                  onPressed: () {
+                    context.read<TasksCubit>().changeCurrentList(item.listID);
+                    Navigator.pop(context);
+                  },
+                  child: Text(item.listName),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

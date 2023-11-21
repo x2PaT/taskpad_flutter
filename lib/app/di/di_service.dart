@@ -5,7 +5,9 @@ import 'package:taskpad_flutter/app/data/dao/task_dao.dart';
 import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
 import 'package:taskpad_flutter/cubit/cubit/tasks_cubit.dart';
 import 'package:taskpad_flutter/repository/lists_repository_impl.dart';
+import 'package:taskpad_flutter/repository/lists_repository_interface.dart';
 import 'package:taskpad_flutter/repository/tasks_repository_impl.dart';
+import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
 
 class DiService {
   DiService._();
@@ -20,16 +22,15 @@ class DiService {
     getIt.registerFactory(() => TasksCubit(listsRepository: getIt(), tasksRepository: getIt()));
 
 //repository
-    getIt.registerLazySingleton(() => ListsRepository(
+    getIt.registerLazySingleton<IListsRepository>(() => ListsRepository(
           listDao: getIt(),
           settingsDao: getIt(),
         ));
 
-    getIt.registerLazySingleton(() => TasksRepository(
+    getIt.registerLazySingleton<ITasksRepository>(() => TasksRepository(
           taskDao: getIt(),
           settingsDao: getIt(),
           listDao: getIt(),
-          listsRepository: getIt(),
         ));
 
 //datasource

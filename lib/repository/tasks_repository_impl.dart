@@ -5,20 +5,17 @@ import 'package:taskpad_flutter/app/data/dao/task_dao.dart';
 import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
 import 'package:taskpad_flutter/dev_helpers/colored_prints.dart';
 import 'package:taskpad_flutter/models/task_model.dart';
-import 'package:taskpad_flutter/repository/lists_repository_impl.dart';
 import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
 
 class TasksRepository implements ITasksRepository {
   TasksRepository({
     required this.taskDao,
     required this.settingsDao,
-    required this.listsRepository,
     required this.listDao,
   });
 
   final TaskDao taskDao;
   final SettingsDao settingsDao;
-  final ListsRepository listsRepository;
   final ListDao listDao;
   @override
   Future<void> addTask(TaskModel taskModel) async {
@@ -45,5 +42,10 @@ class TasksRepository implements ITasksRepository {
         return a.where((e) => e.listId == listId).toList();
       },
     );
+  }
+
+  @override
+  List<TaskModel> getTaskModels() {
+    return taskDao.getAllObjects();
   }
 }

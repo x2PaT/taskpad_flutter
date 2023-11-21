@@ -5,5 +5,7 @@ abstract class IListsRepository {
   Future<void> addList(ListModel tasksListModel);
   Future<void> deleteList(int listID);
   Future<void> updateCurrentListId(int listID);
-  Future<void> getCurrentListId();
+  Future<int?> getCurrentListId();
+
+  List<ListModel> getListModels();
 }

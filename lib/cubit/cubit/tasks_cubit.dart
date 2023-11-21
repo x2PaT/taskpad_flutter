@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskpad_flutter/dev_helpers/colored_prints.dart';
 import 'package:taskpad_flutter/models/list_model.dart';
 import 'package:taskpad_flutter/models/task_model.dart';
-import 'package:taskpad_flutter/repository/lists_repository_impl.dart';
-import 'package:taskpad_flutter/repository/tasks_repository_impl.dart';
+import 'package:taskpad_flutter/repository/lists_repository_interface.dart';
+import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
 
 part 'tasks_state.dart';
 
@@ -18,8 +18,8 @@ class TasksCubit extends Cubit<TasksState> {
       (value) => getTasks(),
     );
   }
-  final TasksRepository tasksRepository;
-  final ListsRepository listsRepository;
+  final ITasksRepository tasksRepository;
+  final IListsRepository listsRepository;
 
   void getTasks() {
     printC("TasksCubit getTasks");

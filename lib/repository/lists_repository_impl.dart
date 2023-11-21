@@ -1,4 +1,3 @@
-
 import 'package:rxdart/rxdart.dart';
 import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
 import 'package:taskpad_flutter/models/list_model.dart';
@@ -38,5 +37,10 @@ class ListsRepository implements IListsRepository {
   @override
   Future<int?> getCurrentListId() async {
     return settingsDao.readCurrentListIDValue();
+  }
+
+  @override
+  List<ListModel> getListModels() {
+    return listDao.getAllObjects();
   }
 }

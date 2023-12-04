@@ -1,4 +1,3 @@
-
 import '../../../models/setting_model.dart';
 import '../base_dao_impl.dart';
 
@@ -15,12 +14,6 @@ class SettingsDao extends BaseDao<SettingModel> {
   Future<void> setValueForKey(int key, dynamic value) async {
     final newSetting = SettingModel(key: key, value: value);
     await addObject(key, newSetting);
-  }
-
-  Stream<int?> readCurrentListID() {
-    return readSingleObjectStream(key: currentListKey).map(
-      (event) => event.value,
-    );
   }
 
   int? readCurrentListIDValue() {

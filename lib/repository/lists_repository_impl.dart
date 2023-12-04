@@ -1,4 +1,3 @@
-import 'package:rxdart/rxdart.dart';
 import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
 import 'package:taskpad_flutter/models/list_model.dart';
 import 'package:taskpad_flutter/repository/lists_repository_interface.dart';
@@ -13,11 +12,6 @@ class ListsRepository implements IListsRepository {
 
   final ListDao listDao;
   final SettingsDao settingsDao;
-
-  @override
-  Stream<List<ListModel>> getListsStream() {
-    return listDao.readObjectsStream().startWith(listDao.getAllObjects());
-  }
 
   @override
   Future<void> addList(ListModel tasksListModel) async {

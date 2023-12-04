@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../cubit/cubit/tasks_cubit.dart';
 
@@ -9,17 +10,19 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: HomeScreenDrawer(),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            ListView.builder(
+              itemBuilder: (context, index) {
+                ListTile();
+              },
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text("TaskPad Flutter"),
-        actions: [
-          IconButton(
-              onPressed: () => context.read<TasksCubit>().showPrevList(),
-              icon: Icon(Icons.arrow_circle_left_rounded)),
-          IconButton(
-              onPressed: () => context.read<TasksCubit>().showNextList(),
-              icon: Icon(Icons.arrow_circle_right)),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -28,64 +31,49 @@ class HomeScreen extends StatelessWidget {
       ),
       body: BlocBuilder<TasksCubit, TasksState>(
         builder: (context, state) {
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.tasks.length,
-                  itemBuilder: (context, index) {
-                    final item = state.tasks[index];
-
-                    return ListTile(
-                      title: Text(
-                        item.taskText,
-                      ),
-                      trailing: IconButton(
-                        onPressed: () async {
-                          await context.read<TasksCubit>().deleteTask(item.taskId);
-                        },
-                        icon: Icon(Icons.delete),
-                      ),
-                    );
-                  },
-                ),
+          if (state is TasksStateLoading || state is TasksStateInitial) {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Text(
+                    "Data loading",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  CircularProgressIndicator(),
+                ],
               ),
-            ],
-          );
+            );
+          }
+          if (state is TasksStateLoaded) {
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: state.tasks.length,
+                    itemBuilder: (context, index) {
+                      final item = state.tasks[index];
+
+                      return ListTile(
+                        title: Text(
+                          item.taskText,
+                        ),
+                        trailing: IconButton(
+                          onPressed: () async {
+                            await context.read<TasksCubit>().deleteTask(item.taskId);
+                          },
+                          icon: Icon(Icons.delete),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Container();
+          }
         },
-      ),
-    );
-  }
-}
-
-class HomeScreenDrawer extends StatelessWidget {
-  const HomeScreenDrawer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final lists = context.watch<TasksCubit>().state.lists;
-
-    return Drawer(
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: lists.length,
-              itemBuilder: (context, index) {
-                final item = lists[index];
-                return ElevatedButton(
-                  onPressed: () {
-                    context.read<TasksCubit>().changeCurrentList(item.listID);
-                    Navigator.pop(context);
-                  },
-                  child: Text(item.listName),
-                );
-              },
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'base_dao_interface.dart';
-import 'dao/helpers/value_listenable_to_stream_adapter.dart';
 
 abstract class BaseDao<T> implements IBaseDao<T> {
   late Box<T> _box;
@@ -44,20 +43,5 @@ abstract class BaseDao<T> implements IBaseDao<T> {
     final object = _box.get(key);
 
     return object;
-  }
-
-  @override
-  Stream<T> readSingleObjectStream({required int key}) {
-    final T? initValue = readObjectByKey(key);
-    if (initValue != null) {
-      return _box.listenable(keys: [key]).toStream().map((event) => event.values.first);
-    } else {
-      throw Exception("Wrong key");
-    }
-  }
-
-  @override
-  Stream<List<T>> readObjectsStream() {
-    return _box.listenable().toStream().map((event) => event.values.toList());
   }
 }

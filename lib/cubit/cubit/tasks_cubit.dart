@@ -1,8 +1,13 @@
 import 'dart:math';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:taskpad_flutter/app/data/dao/settings_dao.dart';
+import '../../app/constants/config.dart';
 import '../../dev_helpers/colored_prints.dart';
 import '../../models/list_model.dart';
+import '../../models/setting_model.dart';
 import '../../models/task_model.dart';
 import '../../repository/lists_repository_interface.dart';
 import '../../repository/tasks_repository_interface.dart';
@@ -13,46 +18,44 @@ class TasksCubit extends Cubit<TasksState> {
   TasksCubit({
     required this.listsRepository,
     required this.tasksRepository,
-  }) : super(TasksState()) {
-    initApp().then(
-      (value) => getTasks(),
-    );
+  }) : super(TasksStateInitial()) {
+    start();
   }
+
+  final Box<TaskModel> box = Hive.box<TaskModel>(Config.tasksBoxName);
+  final Box<ListModel> listBox = Hive.box<ListModel>(Config.listsBoxName);
+  final Box<SettingModel> settingsBox = Hive.box<SettingModel>(Config.settingsBoxName);
+
   final ITasksRepository tasksRepository;
   final IListsRepository listsRepository;
 
-  void getTasks() {
-    printC("TasksCubit getTasks");
+  void start() {
+    emit(TasksStateLoading());
 
-    listsRepository.getListsStream().listen((event) {
-      printR("object lists");
+    updateState();
 
-      emit(state.copyWith(lists: event));
-    });
-
-    tasksRepository.getTaskFromCurrentListStream().listen((event) {
-      printR("object tasks");
-
-      emit(state.copyWith(tasks: event));
-    });
-
-    tasksRepository.currentListIdStream().listen((event) {
-      printR("object currentListId");
-
-      emit(state.copyWith(currentListId: event));
-    });
+    addListener();
   }
 
-  // Future<void> forceStreamInit() async {
-  //   final currentListID = await listsRepository.getCurrentListId();
-  //   await listsRepository.updateCurrentListId(currentListID!);
+  void updateState() {
+    final currentList = listBox.get(settingsBox.get(SettingsDao.currentListKey)?.value);
 
-  //   final taskId = randomID();
-  //   await tasksRepository.addTask(TaskModel(
-  //       taskId: taskId,
-  //       listId: currentListID,
-  //       taskText: "list id:$currentListID on task id:$taskId"));
-  // }
+    final tasksList = box.values.where((element) => element.listId == currentList?.listID).toList();
+
+    emit(TasksStateLoaded(tasks: tasksList, currentList: currentList!));
+  }
+
+  void addListener() {
+    Listenable.merge(
+      [
+        box.listenable(),
+        listBox.listenable(),
+        settingsBox.listenable(
+          keys: [SettingsDao.currentListKey],
+        )
+      ],
+    ).addListener(updateState);
+  }
 
   Future<void> initApp() async {
     final currentListID = await listsRepository.getCurrentListId();
@@ -96,20 +99,6 @@ class TasksCubit extends Cubit<TasksState> {
         taskText: "New task",
       ),
     );
-  }
-
-  void showNextList() {
-    final currentListIndex = state.lists.map((e) => e.listID).toList().indexOf(state.currentListId);
-    final newListId = state.lists[(currentListIndex + 1) % state.lists.length].listID;
-
-    changeCurrentList(newListId);
-  }
-
-  showPrevList() {
-    final currentListIndex = state.lists.map((e) => e.listID).toList().indexOf(state.currentListId);
-    final newListId = state.lists[(currentListIndex - 1) % state.lists.length].listID;
-
-    changeCurrentList(newListId);
   }
 }
 

@@ -19,7 +19,10 @@ class DiService {
   void init() {
 //bloc
 
-    getIt.registerFactory(() => TasksCubit(listsRepository: getIt(), tasksRepository: getIt()));
+    getIt.registerFactory(() => TasksCubit(
+          listsRepository: getIt(),
+          tasksRepository: getIt(),
+        ));
 
 //repository
     getIt.registerLazySingleton<IListsRepository>(() => ListsRepository(

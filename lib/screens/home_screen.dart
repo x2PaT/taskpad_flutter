@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskpad_flutter/cubit/lists/lists_cubit.dart';
 
 import '../cubit/tasks/tasks_cubit.dart';
+import 'home_screen_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,11 +14,6 @@ class HomeScreen extends StatelessWidget {
       drawer: HomeScreenDrawer(),
       appBar: AppBar(
         title: const Text("TaskPad Flutter"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          context.read<TasksCubit>().addTask();
-        },
       ),
       body: BlocBuilder<TasksCubit, TasksState>(
         builder: (context, state) {
@@ -58,6 +54,34 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                 ),
+                Container(
+                  child: Row(children: [
+                    IconButton(
+                      padding: EdgeInsets.all(14),
+                      iconSize: 32,
+                      onPressed: () {
+                        context.read<ListsCubit>().changeToPrevList(currentList: state.currentList);
+                      },
+                      icon: Icon(Icons.arrow_back_rounded),
+                      color: Colors.lightBlueAccent,
+                    ),
+                    Text(state.currentList.listName),
+                    IconButton(
+                      padding: EdgeInsets.all(14),
+                      iconSize: 32,
+                      onPressed: () {
+                        context.read<ListsCubit>().changeToNextList(currentList: state.currentList);
+                      },
+                      icon: Icon(Icons.arrow_forward_rounded),
+                      color: Colors.lightBlueAccent,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          context.read<TasksCubit>().addTask();
+                        },
+                        child: Text("Add task"))
+                  ]),
+                ),
               ],
             );
           } else {
@@ -65,41 +89,6 @@ class HomeScreen extends StatelessWidget {
           }
         },
       ),
-    );
-  }
-}
-
-class HomeScreenDrawer extends StatelessWidget {
-  const HomeScreenDrawer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ListsCubit, ListsState>(
-      builder: (context, state) {
-        return Drawer(
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.listsModels.length,
-                  itemBuilder: (context, index) {
-                    final item = state.listsModels[index];
-                    return ListTile(
-                      onTap: () {
-                        context.read<ListsCubit>().changeCurrentList(item);
-                        Navigator.pop(context);
-                      },
-                      title: Text(item.listName),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-        );
-      },
     );
   }
 }

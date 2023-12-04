@@ -23,11 +23,25 @@ class ListsCubit extends Cubit<ListsState> {
 
     final data = listBox.values.toList();
 
-    emit(ListsState(listsModels: data));
+    emit(ListsState(listsModels: data, status: Status.success));
   }
 
   changeCurrentList(ListModel item) {
     settingsBox.put(SettingsDao.currentListKey,
         SettingModel(key: SettingsDao.currentListKey, value: item.listID));
+  }
+
+  void changeToNextList({required ListModel currentList}) {
+    final nextListOrNull = state.nextList(currentList);
+    if (nextListOrNull != null) {
+      changeCurrentList(nextListOrNull);
+    }
+  }
+
+  void changeToPrevList({required ListModel currentList}) {
+    final prevListOrNull = state.prevList(currentList);
+    if (prevListOrNull != null) {
+      changeCurrentList(prevListOrNull);
+    }
   }
 }

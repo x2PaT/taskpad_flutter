@@ -7,6 +7,8 @@ class TasksStateInitial extends TasksState {}
 
 class TasksStateLoading extends TasksState {}
 
+class TasksStateListNotExist extends TasksState {}
+
 class TasksStateLoaded extends TasksState {
   TasksStateLoaded({
     required this.tasks,

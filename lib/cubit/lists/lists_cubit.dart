@@ -6,6 +6,7 @@ import 'package:taskpad_flutter/models/list_model.dart';
 import '../../app/constants/config.dart';
 import '../../app/enums/enums.dart';
 import '../../models/setting_model.dart';
+import '../tasks/tasks_cubit.dart';
 
 part 'lists_state.dart';
 
@@ -20,6 +21,22 @@ class ListsCubit extends Cubit<ListsState> {
 
   void start() {
     emit(ListsState(status: Status.loading));
+
+    final data = listBox.values.toList();
+
+    emit(ListsState(listsModels: data, status: Status.success));
+  }
+
+  void addList() {
+    final listID = randomID();
+    final newList = (ListModel(listID: listID, listName: "$listID list"));
+    listBox.put(listID, newList);
+    changeCurrentList(newList);
+  }
+
+  deleteList(ListModel item) {
+    listBox.delete(item.listID);
+    //TODO: delete tasks from tasks list when list model is removed
 
     final data = listBox.values.toList();
 

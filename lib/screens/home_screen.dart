@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
 
                       return ListTile(
                         title: Text(
-                          item.taskText,
+                          "${item.taskId} ${item.taskText}",
                         ),
                         trailing: IconButton(
                           onPressed: () async {
@@ -55,32 +55,47 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  child: Row(children: [
-                    IconButton(
-                      padding: EdgeInsets.all(14),
-                      iconSize: 32,
-                      onPressed: () {
-                        context.read<ListsCubit>().changeToPrevList(currentList: state.currentList);
-                      },
-                      icon: Icon(Icons.arrow_back_rounded),
-                      color: Colors.lightBlueAccent,
-                    ),
-                    Text(state.currentList.listName),
-                    IconButton(
-                      padding: EdgeInsets.all(14),
-                      iconSize: 32,
-                      onPressed: () {
-                        context.read<ListsCubit>().changeToNextList(currentList: state.currentList);
-                      },
-                      icon: Icon(Icons.arrow_forward_rounded),
-                      color: Colors.lightBlueAccent,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          context.read<TasksCubit>().addTask();
-                        },
-                        child: Text("Add task"))
-                  ]),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          padding: EdgeInsets.all(14),
+                          iconSize: 32,
+                          onPressed: () {
+                            context
+                                .read<ListsCubit>()
+                                .changeToPrevList(currentList: state.currentList);
+                          },
+                          icon: Icon(Icons.arrow_back_rounded),
+                          color: Color(
+                              context.read<ListsCubit>().state.isPrevList(state.currentList)
+                                  ? 0xFF40C4FF
+                                  : 0x20000000)),
+                      Expanded(
+                        child: Text(
+                          state.currentList.listName,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      IconButton(
+                          padding: EdgeInsets.all(14),
+                          iconSize: 32,
+                          onPressed: () {
+                            context
+                                .read<ListsCubit>()
+                                .changeToNextList(currentList: state.currentList);
+                          },
+                          icon: Icon(Icons.arrow_forward_rounded),
+                          color: Color(
+                              context.read<ListsCubit>().state.isNextList(state.currentList)
+                                  ? 0xFF40C4FF
+                                  : 0x20000000)),
+                      ElevatedButton(
+                          onPressed: () {
+                            newTaskBottomSheet(context);
+                          },
+                          child: Text("Add task"))
+                    ],
+                  ),
                 ),
               ],
             );
@@ -89,6 +104,25 @@ class HomeScreen extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  Future<dynamic> newTaskBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                context.read<TasksCubit>().addTask();
+                Navigator.pop(context);
+              },
+              child: Text("Add new task"),
+            )
+          ],
+        );
+      },
     );
   }
 }

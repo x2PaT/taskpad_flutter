@@ -3,11 +3,13 @@ import 'package:taskpad_flutter/app/constants/config.dart';
 import 'package:taskpad_flutter/app/data/dao/settings_dao.dart';
 import 'package:taskpad_flutter/app/data/dao/task_dao.dart';
 import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
-import 'package:taskpad_flutter/cubit/cubit/tasks_cubit.dart';
+import 'package:taskpad_flutter/cubit/lists/lists_cubit.dart';
 import 'package:taskpad_flutter/repository/lists_repository_impl.dart';
 import 'package:taskpad_flutter/repository/lists_repository_interface.dart';
 import 'package:taskpad_flutter/repository/tasks_repository_impl.dart';
 import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
+
+import '../../cubit/tasks/tasks_cubit.dart';
 
 class DiService {
   DiService._();
@@ -18,6 +20,7 @@ class DiService {
 
   void init() {
 //bloc
+    getIt.registerFactory(() => ListsCubit());
 
     getIt.registerFactory(() => TasksCubit(
           listsRepository: getIt(),

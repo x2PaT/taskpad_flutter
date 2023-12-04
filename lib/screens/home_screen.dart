@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:taskpad_flutter/cubit/lists/lists_cubit.dart';
 
-import '../cubit/cubit/tasks_cubit.dart';
+import '../cubit/tasks/tasks_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,17 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: [
-            ListView.builder(
-              itemBuilder: (context, index) {
-                ListTile();
-              },
-            )
-          ],
-        ),
-      ),
+      drawer: HomeScreenDrawer(),
       appBar: AppBar(
         title: const Text("TaskPad Flutter"),
       ),
@@ -75,6 +65,41 @@ class HomeScreen extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+}
+
+class HomeScreenDrawer extends StatelessWidget {
+  const HomeScreenDrawer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ListsCubit, ListsState>(
+      builder: (context, state) {
+        return Drawer(
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: state.listsModels.length,
+                  itemBuilder: (context, index) {
+                    final item = state.listsModels[index];
+                    return ListTile(
+                      onTap: () {
+                        context.read<ListsCubit>().changeCurrentList(item);
+                        Navigator.pop(context);
+                      },
+                      title: Text(item.listName),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -58,22 +58,22 @@ class HomeScreenDrawer extends StatelessWidget {
       },
     );
   }
+}
 
-  Future<dynamic> newListBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  context.read<ListsCubit>().addList();
-                  Navigator.pop(context);
-                },
-                child: Text("Add new list"),
-              )
-            ],
-          );
-        });
-  }
+Future<dynamic> newListBottomSheet(BuildContext context) {
+  return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                context.read<ListsCubit>().addList();
+                Navigator.pop(context);
+              },
+              child: Text("Add new list"),
+            )
+          ],
+        );
+      });
 }

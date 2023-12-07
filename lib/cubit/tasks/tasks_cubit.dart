@@ -93,7 +93,19 @@ class TasksCubit extends Cubit<TasksState> {
     tasksRepository.deleteTask(taskID);
   }
 
-  Future<void> addTask() async {
+  Future<void> addTask(String title) async {
+    final currentListID = await listsRepository.getCurrentListId();
+
+    await tasksRepository.addTask(
+      TaskModel(
+        taskId: randomID(),
+        listId: currentListID!,
+        taskText: title,
+      ),
+    );
+  }
+
+  Future<void> addTaskGen() async {
     final currentListID = await listsRepository.getCurrentListId();
 
     final String taskTitle = createTaskTitle();

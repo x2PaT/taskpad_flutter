@@ -4,6 +4,7 @@ import 'package:taskpad_flutter/cubit/lists/lists_cubit.dart';
 
 import '../cubit/tasks/tasks_cubit.dart';
 import 'home_screen_drawer.dart';
+import 'new_task_bottom_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,12 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("TaskPad Flutter"),
       ),
+      floatingActionButton: (context.watch<TasksCubit>().state is TasksStateListNotExist)
+          ? FloatingActionButton(
+              onPressed: () => newListBottomSheet(context),
+              child: Icon(Icons.add),
+            )
+          : null,
       body: BlocBuilder<TasksCubit, TasksState>(
         builder: (context, state) {
           if (state is TasksStateLoading || state is TasksStateInitial) {
@@ -42,7 +49,7 @@ class HomeScreen extends StatelessWidget {
 
                       return ListTile(
                         title: Text(
-                          "${item.taskId} ${item.taskText}",
+                          item.taskText,
                         ),
                         trailing: IconButton(
                           onPressed: () async {
@@ -104,25 +111,6 @@ class HomeScreen extends StatelessWidget {
           }
         },
       ),
-    );
-  }
-
-  Future<dynamic> newTaskBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                context.read<TasksCubit>().addTask();
-                Navigator.pop(context);
-              },
-              child: Text("Add new task"),
-            )
-          ],
-        );
-      },
     );
   }
 }

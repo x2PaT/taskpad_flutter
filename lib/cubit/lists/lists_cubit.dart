@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:taskpad_flutter/app/data/dao/settings_dao.dart';
@@ -29,7 +31,7 @@ class ListsCubit extends Cubit<ListsState> {
 
   void addList() {
     final listID = randomID();
-    final newList = (ListModel(listID: listID, listName: "$listID list"));
+    final newList = (ListModel(listID: listID, listName: "${Random().nextInt(20)} list"));
     listBox.put(listID, newList);
     changeCurrentList(newList);
   }

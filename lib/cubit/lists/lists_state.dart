@@ -26,7 +26,7 @@ class ListsState {
 
   bool isPrevList(ListModel currentList) {
     final currentListIndex = listsModels.indexOf(currentList);
-    return currentListIndex != 0;
+    return currentListIndex > 0;
   }
 
   bool isNextList(ListModel currentList) {

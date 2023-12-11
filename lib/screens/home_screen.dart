@@ -4,11 +4,13 @@ import 'package:taskpad_flutter/cubit/lists/lists_cubit.dart';
 
 import '../cubit/tasks/tasks_cubit.dart';
 import 'home_screen_drawer.dart';
+import 'new_list_bottom_sheet.dart';
 import 'new_task_bottom_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   static const String routeName = "/";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,9 +99,8 @@ class HomeScreen extends StatelessWidget {
                                   ? 0xFF40C4FF
                                   : 0x20000000)),
                       ElevatedButton(
-                          onPressed: () {
-                            newTaskBottomSheet(context);
-                          },
+                          onPressed: () => newTaskBottomSheet(context),
+                          onLongPress: () => context.read<TasksCubit>().addTaskGen(),
                           child: Text("Add task"))
                     ],
                   ),

@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/tasks/tasks_cubit.dart';
+import 'package:taskpad_flutter/cubit/lists/lists_cubit.dart';
 
-Future<dynamic> newTaskBottomSheet(BuildContext context) {
+Future<dynamic> newListBottomSheet(BuildContext context) {
   return showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (context) {
-      return NewTaskBottomSheetContent();
-    },
-  );
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return NewListBottomSheetContent();
+      });
 }
 
-class NewTaskBottomSheetContent extends StatefulWidget {
-  const NewTaskBottomSheetContent({super.key});
+class NewListBottomSheetContent extends StatefulWidget {
+  const NewListBottomSheetContent({super.key});
 
   @override
-  State<NewTaskBottomSheetContent> createState() => _NewTaskBottomSheetContentState();
+  State<NewListBottomSheetContent> createState() => _NewListBottomSheetContentState();
 }
 
-class _NewTaskBottomSheetContentState extends State<NewTaskBottomSheetContent>
+class _NewListBottomSheetContentState extends State<NewListBottomSheetContent>
     with SingleTickerProviderStateMixin {
   late final TextEditingController titleController;
   late final AnimationController shakeAnimationController;
@@ -70,7 +69,7 @@ class _NewTaskBottomSheetContentState extends State<NewTaskBottomSheetContent>
                   icon: Icon(Icons.close, size: 36),
                 ),
                 Text(
-                  "Add task",
+                  "New list",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -83,7 +82,7 @@ class _NewTaskBottomSheetContentState extends State<NewTaskBottomSheetContent>
                       return;
                     }
 
-                    context.read<TasksCubit>().addTask(titleController.text);
+                    context.read<ListsCubit>().addList(titleController.text);
                     Navigator.pop(context);
                   },
                   isSelected: titleController.text.isNotEmpty,
@@ -114,8 +113,8 @@ class _NewTaskBottomSheetContentState extends State<NewTaskBottomSheetContent>
                       child: TextField(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "What do you mean?",
-                          labelText: "Task",
+                          hintText: "Start storing things",
+                          labelText: "List name",
                         ),
                         onChanged: (value) {
                           setState(() {

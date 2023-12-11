@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskpad_flutter/app/enums/enums.dart';
 import 'package:taskpad_flutter/cubit/lists/lists_cubit.dart';
 
+import 'new_list_bottom_sheet.dart';
+
 class HomeScreenDrawer extends StatelessWidget {
-  const HomeScreenDrawer({
-    super.key,
-  });
+  const HomeScreenDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,22 +58,4 @@ class HomeScreenDrawer extends StatelessWidget {
       },
     );
   }
-}
-
-Future<dynamic> newListBottomSheet(BuildContext context) {
-  return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                context.read<ListsCubit>().addList();
-                Navigator.pop(context);
-              },
-              child: Text("Add new list"),
-            )
-          ],
-        );
-      });
 }

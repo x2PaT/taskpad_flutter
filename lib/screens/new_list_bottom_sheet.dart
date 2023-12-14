@@ -31,6 +31,11 @@ class _NewListBottomSheetContentState extends State<NewListBottomSheetContent>
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
+
+    titleController.addListener(() {
+      setState(() {});
+    });
+
     super.initState();
   }
 
@@ -111,17 +116,13 @@ class _NewListBottomSheetContentState extends State<NewListBottomSheetContent>
                         left: offsetAnimation.value + 12.0, right: 12.0 - offsetAnimation.value),
                     child: Center(
                       child: TextField(
+                        autofocus: true,
+                        controller: titleController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: "Start storing things",
                           labelText: "List name",
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            titleController.text = value;
-                          });
-                        },
-                        controller: titleController,
                       ),
                     ),
                   );

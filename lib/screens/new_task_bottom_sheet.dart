@@ -32,6 +32,11 @@ class _NewTaskBottomSheetContentState extends State<NewTaskBottomSheetContent>
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
+
+    titleController.addListener(() {
+      setState(() {});
+    });
+
     super.initState();
   }
 
@@ -112,17 +117,13 @@ class _NewTaskBottomSheetContentState extends State<NewTaskBottomSheetContent>
                         left: offsetAnimation.value + 12.0, right: 12.0 - offsetAnimation.value),
                     child: Center(
                       child: TextField(
+                        autofocus: true,
+                        controller: titleController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: "What do you mean?",
                           labelText: "Task",
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            titleController.text = value;
-                          });
-                        },
-                        controller: titleController,
                       ),
                     ),
                   );

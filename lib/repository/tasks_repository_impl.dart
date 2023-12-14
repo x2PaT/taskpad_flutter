@@ -3,7 +3,7 @@ import 'package:taskpad_flutter/app/data/dao/task_dao.dart';
 import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
 import 'package:taskpad_flutter/models/task_model.dart';
 import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
-
+ 
 class TasksRepository implements ITasksRepository {
   TasksRepository({
     required this.taskDao,

@@ -16,32 +16,30 @@ class DiService {
 
   static final DiService instance = DiService._();
 
-  static final getIt = GetIt.instance;
+  static final get = GetIt.instance;
 
   void init() {
 //bloc
-    getIt.registerFactory(() => ListsCubit());
+    get.registerFactory(() => ListsCubit(listsRepository: get(), tasksRepository: get()));
 
-    getIt.registerFactory(() => TasksCubit(
-          listsRepository: getIt(),
-          tasksRepository: getIt(),
+    get.registerFactory(() => TasksCubit(
+          listsRepository: get(),
+          tasksRepository: get(),
         ));
 
 //repository
-    getIt.registerLazySingleton<IListsRepository>(() => ListsRepository(
-          listDao: getIt(),
-          settingsDao: getIt(),
-        ));
+    get.registerLazySingleton<IListsRepository>(
+        () => ListsRepository(listDao: get(), settingsDao: get(), taskDao: get()));
 
-    getIt.registerLazySingleton<ITasksRepository>(() => TasksRepository(
-          taskDao: getIt(),
-          settingsDao: getIt(),
-          listDao: getIt(),
+    get.registerLazySingleton<ITasksRepository>(() => TasksRepository(
+          taskDao: get(),
+          settingsDao: get(),
+          listDao: get(),
         ));
 
 //datasource
-    getIt.registerLazySingleton(() => TaskDao(Config.tasksBoxName));
-    getIt.registerLazySingleton(() => ListDao(Config.listsBoxName));
-    getIt.registerLazySingleton(() => SettingsDao(Config.settingsBoxName));
+    get.registerLazySingleton(() => TaskDao(Config.tasksBoxName));
+    get.registerLazySingleton(() => ListDao(Config.listsBoxName));
+    get.registerLazySingleton(() => SettingsDao(Config.settingsBoxName));
   }
 }

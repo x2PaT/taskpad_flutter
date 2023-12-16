@@ -1,27 +1,23 @@
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:taskpad_flutter/app/data/dao/settings_dao.dart';
 import 'package:taskpad_flutter/models/list_model.dart';
 
-import '../../app/constants/config.dart';
 import '../../app/enums/enums.dart';
-import '../../models/setting_model.dart';
-import '../../models/task_model.dart';
-import '../tasks/tasks_cubit.dart';
+import '../../app/helpers/tast_gen.dart';
+import '../../repository/lists_repository_interface.dart';
+import '../../repository/tasks_repository_interface.dart';
 
 part 'lists_state.dart';
 
 class ListsCubit extends Cubit<ListsState> {
-  ListsCubit() : super(ListsState()) {
+  ListsCubit({
+    required this.listsRepository,
+    required this.tasksRepository,
+  }) : super(ListsState()) {
     start();
   }
 
-  final Box<ListModel> listBox = Hive.box<ListModel>(Config.listsBoxName);
-  final Box<TaskModel> box = Hive.box<TaskModel>(Config.tasksBoxName);
-
-  final Box<SettingModel> settingsBox = Hive.box<SettingModel>(Config.settingsBoxName);
+  final ITasksRepository tasksRepository;
+  final IListsRepository listsRepository;
 
   void start() {
     updateState();
@@ -32,35 +28,23 @@ class ListsCubit extends Cubit<ListsState> {
   void updateState() {
     emit(ListsState(status: Status.loading));
 
-    final data = listBox.values.toList();
+    final data = listsRepository.getListModels();
     emit(ListsState(listsModels: data, status: Status.success));
   }
 
   void addListener() {
-    Listenable.merge(
-      [
-        box.listenable(),
-        listBox.listenable(),
-        settingsBox.listenable(
-          keys: [SettingsDao.currentListKey],
-        )
-      ],
-    ).addListener(updateState);
+    listsRepository.listsListenable().addListener(updateState);
   }
 
   void addList(String listName) {
     final listID = randomID();
-    // "${Random().nextInt(20)} list")
-    final newList = (ListModel(listID: listID, listName: listName));
-    listBox.put(listID, newList);
+    final newList = ListModel(listID: listID, listName: listName);
+    listsRepository.addList(newList);
     changeCurrentList(newList);
   }
 
   deleteList(ListModel item) {
-    listBox.delete(item.listID);
-    box.deleteAll(
-      box.values.where((element) => element.listId == item.listID).map((e) => e.taskId),
-    );
+    listsRepository.deleteList(item.listID);
   }
 
   void changeToNextList({required ListModel currentList}) {
@@ -78,12 +62,12 @@ class ListsCubit extends Cubit<ListsState> {
   }
 
   changeCurrentList(ListModel item) {
-    settingsBox.put(SettingsDao.currentListKey,
-        SettingModel(key: SettingsDao.currentListKey, value: item.listID));
+    listsRepository.updateCurrentListId(item.listID);
   }
 
   @override
   Future<void> close() {
+    listsRepository.listsListenable().removeListener(updateState);
     return super.close();
   }
 }

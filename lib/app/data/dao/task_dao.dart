@@ -39,4 +39,5 @@ class TaskDao extends BaseDao<TaskModel> {
       throw Exception("Wrong data type");
     }
   }
+
 }

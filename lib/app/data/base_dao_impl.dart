@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'base_dao_interface.dart';
@@ -43,5 +44,15 @@ abstract class BaseDao<T> implements IBaseDao<T> {
     final object = _box.get(key);
 
     return object;
+  }
+
+  @override
+  void deleteAll(List<int> keys) {
+    _box.deleteAll(keys);
+  }
+
+  @override
+  ValueListenable<Box<T>> listenable({List<dynamic>? keys}) {
+    return _box.listenable(keys: keys);
   }
 }

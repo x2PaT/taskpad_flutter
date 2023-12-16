@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:taskpad_flutter/app/data/dao/settings_dao.dart';
 import 'package:taskpad_flutter/app/data/dao/task_dao.dart';
 import 'package:taskpad_flutter/app/data/dao/tasks_list_dao.dart';
 import 'package:taskpad_flutter/models/task_model.dart';
 import 'package:taskpad_flutter/repository/tasks_repository_interface.dart';
- 
+
 class TasksRepository implements ITasksRepository {
   TasksRepository({
     required this.taskDao,
@@ -22,6 +23,17 @@ class TasksRepository implements ITasksRepository {
   @override
   Future<void> deleteTask(int taskID) async {
     await taskDao.deleteObject(taskID);
+  }
+
+  @override
+  Listenable tasksListenable() {
+    return Listenable.merge(
+      [
+        taskDao.listenable(),
+        listDao.listenable(),
+        settingsDao.listenable(keys: [SettingsDao.currentListKey])
+      ],
+    );
   }
 
   @override

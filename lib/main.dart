@@ -11,8 +11,8 @@ void main() async {
 
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider.value(value: DiService.getIt<TasksCubit>()),
-      BlocProvider.value(value: DiService.getIt<ListsCubit>()),
+      BlocProvider.value(value: DiService.get<TasksCubit>()),
+      BlocProvider.value(value: DiService.get<ListsCubit>()),
     ],
     child: const MyApp(),
   ));

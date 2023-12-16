@@ -1,13 +1,9 @@
 import 'dart:math';
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:taskpad_flutter/app/data/dao/settings_dao.dart';
-import '../../app/constants/config.dart';
+import '../../app/helpers/tast_gen.dart';
 import '../../dev_helpers/colored_prints.dart';
 import '../../models/list_model.dart';
-import '../../models/setting_model.dart';
 import '../../models/task_model.dart';
 import '../../repository/lists_repository_interface.dart';
 import '../../repository/tasks_repository_interface.dart';
@@ -22,10 +18,6 @@ class TasksCubit extends Cubit<TasksState> {
     start();
   }
 
-  final Box<TaskModel> box = Hive.box<TaskModel>(Config.tasksBoxName);
-  final Box<ListModel> listBox = Hive.box<ListModel>(Config.listsBoxName);
-  final Box<SettingModel> settingsBox = Hive.box<SettingModel>(Config.settingsBoxName);
-
   final ITasksRepository tasksRepository;
   final IListsRepository listsRepository;
 
@@ -38,9 +30,12 @@ class TasksCubit extends Cubit<TasksState> {
   }
 
   void updateState() {
-    final currentList = listBox.get(settingsBox.get(SettingsDao.currentListKey)?.value);
+    final currentList = listsRepository.getCurrentListModel();
 
-    final tasksList = box.values.where((element) => element.listId == currentList?.listID).toList();
+    final tasksList = tasksRepository
+        .getTaskModels()
+        .where((element) => element.listId == currentList?.listID)
+        .toList();
 
     if (currentList == null) {
       emit(TasksStateListNotExist());
@@ -50,15 +45,7 @@ class TasksCubit extends Cubit<TasksState> {
   }
 
   void addListener() {
-    Listenable.merge(
-      [
-        box.listenable(),
-        listBox.listenable(),
-        settingsBox.listenable(
-          keys: [SettingsDao.currentListKey],
-        )
-      ],
-    ).addListener(updateState);
+    tasksRepository.tasksListenable().addListener(updateState);
   }
 
   Future<void> initApp() async {
@@ -118,61 +105,10 @@ class TasksCubit extends Cubit<TasksState> {
       ),
     );
   }
-}
 
-String createTaskTitle() {
-  final verbs = [
-    "Buy",
-    "Make",
-    "Create",
-    "Find",
-    "Take",
-    "Cook",
-    "Build",
-    "Write",
-    "Discover",
-    "Gather"
-  ];
-  final objects = [
-    "Fresh vegetables",
-    "Paper airplanes",
-    "Digital artwork",
-    "Lost keys",
-    "Photographs",
-    "Spaghetti",
-    "Sandcastle",
-    "Novel",
-    "Treasure",
-    "Information"
-  ];
-  final preposition = [
-    "At",
-    "From",
-    "On",
-    "Under",
-    "In",
-    "With",
-    "On",
-    "About",
-    "Near",
-    "During",
-  ];
-  final location = [
-    "Grocery store",
-    "Origami paper",
-    "Computer",
-    "Sofa",
-    "National park",
-    "Tomato sauce",
-    "Beach",
-    "Adventure",
-    "Ancient ruins",
-    "Conference"
-  ];
-  final random = Random();
-  return "${verbs[random.nextInt(verbs.length)]} ${objects[random.nextInt(objects.length)]} ${preposition[random.nextInt(preposition.length)]} ${location[random.nextInt(location.length)]}";
-}
-
-int randomID() {
-  return Random().nextInt(0xFFFFFF);
+  @override
+  Future<void> close() {
+    tasksRepository.tasksListenable().removeListener(updateState);
+    return super.close();
+  }
 }
